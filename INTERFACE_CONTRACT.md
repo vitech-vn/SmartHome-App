@@ -4,7 +4,7 @@
 
 ---
 
-## 📁 1. Quy Định Cấu Trúc Thư Mục Dự Án (Qt Creator)
+# 📁 1. Quy Định Cấu Trúc Thư Mục Dự Án (Qt Creator)
 
 Mọi người tạo file đúng vị trí quy định để tránh lỗi đường dẫn khi `#include`:
 
@@ -27,3 +27,4 @@ SmartHomeProject/
 └── Frontend/              <-- Nơi làm việc của D
     ├── MainWindow.h / MainWindow.cpp / MainWindow.ui
     └── CustomChart.h / CustomChart.cpp
+
