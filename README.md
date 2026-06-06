@@ -171,23 +171,6 @@ Từ đó hệ thống cập nhật:
 
 ---
 
-## 🚀 Hướng Dẫn Thiết Lập
-
-### Clone dự án
-
-```bash
-git clone <repository-url>
-```
-
-### Mở bằng Qt Creator
-
-1. Open Project
-2. Chọn file `.pro`
-3. Build Project
-4. Run
-
----
-
 ## 🔀 Quy Trình Làm Việc
 
 * Không commit trực tiếp lên `main`.
