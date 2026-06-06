@@ -1,44 +1,222 @@
-# 🏡 Smart Home Energy Monitoring System (OOP C++ & Qt)
+# 🏡 Smart Home Energy Monitoring System
 
-> **Đồ án môn học:** Lập trình hướng đối tượng (OOP)
-> **Thời gian thực hiện:** 1 - 2 Tuần (Mô hình phát triển song song tốc độ cao)
-> **Công nghệ sử dụng:** C++11, Qt Framework (Qt Quick/QML hoặc Qt Widgets), QtCharts, Multi-threading.
+> Hệ thống mô phỏng nhà thông minh (Smart Home) sử dụng **C++ và Qt Framework** nhằm quản lý thiết bị gia dụng, giám sát điện năng tiêu thụ, cảnh báo quá tải và trực quan hóa dữ liệu theo thời gian thực.
 
 ---
 
-## 🏗️ 1. Quy Chuẩn Thiết Kế & Hợp Đồng Giao Tiếp
+## 📋 Tổng Quan Dự Án
 
-Để đảm bảo các thành viên có thể **lập trình độc lập 100% cùng một lúc** mà không cần đợi nhau, nhóm đã thống nhất cấu trúc thư mục, kiểu dữ liệu chung và luồng truyền tín hiệu giữa UI và Logic tại file quy ước riêng.
+Smart Home Energy Monitoring System là ứng dụng mô phỏng một ngôi nhà thông minh với các chức năng:
 
-👉 **Vui lòng đọc kỹ trước khi code:** [Tài liệu Hợp đồng Giao tiếp Interface (INTERFACE_CONTRACT.md)](./INTERFACE_CONTRACT.md)
+* Quản lý thiết bị gia dụng trong nhà.
+* Bật/Tắt và điều chỉnh trạng thái thiết bị từ giao diện.
+* Theo dõi công suất tiêu thụ theo thời gian thực.
+* Tính toán điện năng tiêu thụ và chi phí điện.
+* Cảnh báo quá tải hệ thống.
+* Cảnh báo thiết bị hoạt động quá lâu.
+* Hiển thị thống kê và biểu đồ tiêu thụ điện.
 
----
+Dự án được xây dựng theo mô hình **Object-Oriented Programming (OOP)** và kiến trúc phân tách rõ ràng giữa:
 
-## 📊 2. Bảng Phân Công Nhiệm Vụ (Contribution Matrix)
-
-| Thành viên | Vai trò | File phụ trách chính | Nhiệm vụ cốt lõi |
-| :--- | :--- | :--- | :--- |
-| **Thành viên A**<br>*(Leader)* | **Core Engine & Quản lý** | `SmartHomeManager.h/cpp`<br>`Room.h/cpp` | - Quản lý cấu trúc nhà/phòng (`std::vector<Device*>`).<br>- Xử lý luồng kích hoạt Bật/Tắt thiết bị.<br>- Hiện thực **Logic Cảnh báo Quá tải** (>5000W). |
-| **Thành viên B** | **Logic Thiết bị (OOP)** | `Light.h/cpp`, `Fan.h/cpp`<br>`AirConditioner.h/cpp` | - Định nghĩa các lớp con kế thừa từ `Device`.<br>- Triển khai **Tính đa hình** cho hàm tính công suất thực tế.<br>- Viết logic **Cảnh báo quên tắt thiết bị** (>4h liên tục). |
-| **Thành viên C** | **Simulator & Định lượng** | `SimulationEngine.h/cpp` | - Tạo `QTimer` mô phỏng: 1 giây thực = 30 phút giả lập.<br>- Viết thuật toán tính **Tiền điện lũy tiến 6 bậc EVN**.<br>- Trích xuất mảng dữ liệu tiêu thụ 24 giờ để vẽ biểu đồ. |
-| **Thành viên D** | **Frontend UI & Biểu đồ** | `MainWindow.ui`<br>`CustomChart.h/cpp` | - Thiết kế giao diện Dashboard (Dark Mode phẳng, hiện đại).<br>- Sử dụng `QtCharts` để **vẽ biểu đồ xu hướng tiêu thụ**.<br>- Thiết kế các Pop-up/Banner cảnh báo trực quan. |
-| **Thành viên E** | **Git Master, QA & Report** | `TestSuites.cpp`<br>`BaoCao.docx`, `Slide.pptx` | - Khởi tạo, cấu hình Git Branches và giải quyết xung đột.<br>- Hiện thực **15+ Test Cases** (Kiểm thử biên, dữ liệu sai).<br>- Tổng hợp tài liệu báo cáo và làm Slide thuyết trình. |
-
----
-
-## 📅 3. Lộ Trình Thực Hiện Chi Tiết (12 Ngày)
-
-* **Ngày 1:** Họp nhóm, thống nhất [INTERFACE_CONTRACT.md](./INTERFACE_CONTRACT.md). Thành viên E tạo repo GitHub, chia nhánh: `dev-core` (A), `dev-device` (B), `dev-sim` (C), `dev-ui` (D).
-* **Ngày 2 - Ngày 5:** Code song song trên nhánh riêng biệt.
-* **Ngày 6 (Integration Day):** Merge toàn bộ code vào nhánh `main` và kết nối Signal & Slot.
-* **Ngày 7 - Ngày 9:** Chạy các kịch bản kiểm thử (Test Cases), sửa lỗi (Bug fixing) và tối ưu hóa biểu đồ.
-* **Ngày 10 - Ngày 12:** Đóng gói phần mềm, hoàn thiện file báo cáo Word và Slide thuyết trình.
+* Frontend (UI)
+* Backend (Business Logic)
+* Simulation Engine
+* Data Contract
 
 ---
 
-## 🛠️ 4. Quy Định Sử Dụng Git
+## 🎯 Mục Tiêu Học Thuật
 
-1. **KHÔNG** code trực tiếp trên nhánh `main`. Nhánh `main` chỉ dùng để lưu bản chạy thử cuối cùng của cả nhóm.
-2. Mọi tính năng mới bắt buộc phải viết trên nhánh cá nhân (`dev-xxx`).
-3. Trước khi đẩy code lên (Push), bắt buộc phải chạy `git pull origin main` về nhánh của mình để kiểm tra lỗi xung đột code.
-4. Mọi vấn đề về xung đột mã nguồn liên hệ ngay **Thành viên E (Git Master)** để xử lý.
+Thông qua dự án, nhóm áp dụng các kiến thức:
+
+* Class & Object
+* Inheritance
+* Polymorphism
+* Encapsulation
+* Abstraction
+* Signals & Slots trong Qt
+* Event-Driven Programming
+* Modular Design
+* Team Development với GitHub
+
+---
+
+## 🛠 Công Nghệ Sử Dụng
+
+| Thành phần       | Công nghệ    |
+| ---------------- | ------------ |
+| Ngôn ngữ         | C++11        |
+| Framework        | Qt 6 / Qt 5  |
+| Giao diện        | Qt Widgets   |
+| Biểu đồ          | Qt Charts    |
+| Quản lý mã nguồn | Git & GitHub |
+| IDE              | Qt Creator   |
+
+---
+
+## 🏠 Thiết Bị Được Mô Phỏng
+
+Hệ thống hỗ trợ các thiết bị dân dụng phổ biến:
+
+| Thiết bị        | Type            |
+| --------------- | --------------- |
+| Đèn             | LIGHT           |
+| Quạt            | FAN             |
+| Điều hòa        | AC              |
+| Tivi            | TV              |
+| Tủ lạnh         | FRIDGE          |
+| Máy giặt        | WASHING_MACHINE |
+| Bình nước nóng  | WATER_HEATER    |
+| Lò vi sóng      | MICROWAVE       |
+| Nồi cơm điện    | RICE_COOKER     |
+| Rèm cửa tự động | CURTAIN         |
+
+---
+
+## 📂 Cấu Trúc Dự Án
+
+```text
+SmartHomeProject/
+│
+├── README.md
+├── CONTRIBUTING.md
+├── INTERFACE_CONTRACT.md
+├── DataStructures.h
+│
+├── Backend/
+│   ├── Device.*
+│   ├── Light.*
+│   ├── Fan.*
+│   ├── AirConditioner.*
+│   ├── TV.*
+│   ├── Fridge.*
+│   ├── WashingMachine.*
+│   ├── WaterHeater.*
+│   └── SmartHomeManager.*
+│
+├── Simulator/
+│   └── SimulationEngine.*
+│
+└── Frontend/
+    ├── MainWindow.*
+    ├── MainWindow.ui
+    └── CustomChart.*
+```
+
+---
+
+## ⚙️ Chức Năng Chính
+
+### Quản Lý Thiết Bị
+
+* Bật/Tắt thiết bị.
+* Điều chỉnh tham số thiết bị.
+* Hiển thị trạng thái hoạt động.
+
+### Giám Sát Điện Năng
+
+* Công suất tức thời.
+* Điện năng tiêu thụ tích lũy.
+* Thống kê theo thời gian.
+
+### Dashboard
+
+* Tổng số thiết bị.
+* Thiết bị đang hoạt động.
+* Tổng điện năng tiêu thụ.
+* Chi phí điện tạm tính.
+
+### Cảnh Báo
+
+* Quá tải công suất toàn nhà.
+* Thiết bị hoạt động liên tục quá thời gian quy định.
+
+### Biểu Đồ
+
+* Lịch sử tiêu thụ điện.
+* Thống kê 24 giờ gần nhất.
+
+---
+
+## ⏱ Quy Ước Mô Phỏng
+
+```text
+1 giây thực = 0.5 giờ mô phỏng
+```
+
+Simulation Engine phát tín hiệu định kỳ:
+
+```cpp
+emit sig_timeTick(0.5);
+```
+
+Từ đó hệ thống cập nhật:
+
+* Điện năng tiêu thụ
+* Thời gian hoạt động thiết bị
+* Cảnh báo hệ thống
+* Dữ liệu biểu đồ
+
+---
+
+## 👥 Phân Công Thành Viên
+
+| Thành viên | Phụ trách                                         |
+| ---------- | ------------------------------------------------- |
+| Lâm Thị Huyền Vi | Kiến trúc hệ thống, SmartHomeManager, Integration |
+| Phạm Thành Tân | Device Framework và các lớp thiết bị cơ bản       |
+| Ninh Đức Thành | Thiết bị gia dụng mở rộng                         |
+| Trần Duy Bảo | Simulation Engine, Energy Tracking                |
+| Phạm Quốc Thịnh | UI, Dashboard, Charts, Alerts                     |
+
+---
+
+## 🚀 Hướng Dẫn Thiết Lập
+
+### Clone dự án
+
+```bash
+git clone <repository-url>
+```
+
+### Mở bằng Qt Creator
+
+1. Open Project
+2. Chọn file `.pro`
+3. Build Project
+4. Run
+
+---
+
+## 🔀 Quy Trình Làm Việc
+
+* Không commit trực tiếp lên `main`.
+* Mỗi thành viên làm việc trên branch riêng.
+* Pull Request trước khi merge.
+* Tuân thủ quy định trong `CONTRIBUTING.md`.
+* Không tự ý thay đổi `DataStructures.h`.
+
+---
+
+## 📄 Tài Liệu Dự Án
+
+| File                  | Mô tả                         |
+| --------------------- | ----------------------------- |
+| README.md             | Tổng quan dự án               |
+| CONTRIBUTING.md       | Quy trình làm việc GitHub     |
+| INTERFACE_CONTRACT.md | Hợp đồng dữ liệu và giao tiếp |
+| DataStructures.h      | Cấu trúc dữ liệu dùng chung   |
+
+---
+
+## 📌 Ghi Chú
+
+`DataStructures.h` được xem là hợp đồng dữ liệu trung tâm của toàn bộ hệ thống.
+
+Mọi thay đổi liên quan đến:
+
+* Struct
+* Signal/Slot
+* Quy ước dữ liệu
+
+đều phải được thống nhất trước khi triển khai.
