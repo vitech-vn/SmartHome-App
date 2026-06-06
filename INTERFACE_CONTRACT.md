@@ -1,258 +1,272 @@
-# 📐 Quy Ước Cấu Trúc Dữ Liệu & Giao Tiếp (Interface Contract)
+# 📐 Smart Home System - Interface Contract
 
-> **Mục đích:** File này định nghĩa các quy chuẩn chung về cấu trúc thư mục, kiểu dữ liệu, và luồng tín hiệu (Signals/Slots) giữa Frontend (UI) và Backend (Logic). Tất cả thành viên bắt buộc phải tuân thủ để code độc lập không bị xung đột.
+## Mục đích
+
+Tài liệu này định nghĩa các quy chuẩn chung về:
+
+* Cấu trúc dự án
+* Kiểu dữ liệu dùng chung
+* Luồng giao tiếp giữa UI và Backend
+* Quy tắc tích hợp hệ thống
+
+Mọi thành viên phải tuân thủ để đảm bảo các module có thể phát triển độc lập và tích hợp ổn định.
 
 ---
 
-# 📁 1. Quy Định Cấu Trúc Thư Mục Dự Án (Qt Creator)
-
-Mọi người tạo file đúng vị trí quy định để tránh lỗi đường dẫn khi `#include`:
+# 1. Cấu Trúc Dự Án
 
 ```text
 SmartHomeProject/
 │
-├── SmartHomeProject.pro   <-- File cấu hình tổng (Thêm dòng: QT += charts)
-├── DataStructures.h       <-- Định nghĩa Struct dùng chung (Cả team dùng)
+├── SmartHomeProject.pro
+├── DataStructures.h
 │
-├── Backend/               <-- Nơi làm việc của A và B
+├── Backend/
 │   ├── Device.h / Device.cpp
 │   ├── Light.h / Light.cpp
 │   ├── Fan.h / Fan.cpp
 │   ├── AirConditioner.h / AirConditioner.cpp
 │   └── SmartHomeManager.h / SmartHomeManager.cpp
 │
-├── Simulator/             <-- Nơi làm việc của C
+├── Simulator/
 │   └── SimulationEngine.h / SimulationEngine.cpp
 │
-└── Frontend/              <-- Nơi làm việc của D
-    ├── MainWindow.h / MainWindow.cpp / MainWindow.ui
+└── Frontend/
+    ├── MainWindow.h
+    ├── MainWindow.cpp
+    ├── MainWindow.ui
     └── CustomChart.h / CustomChart.cpp
----
+```
 
-# 📐 2. Đặc Tả Dữ Liệu Dùng Chung (DataStructures.h)
+### Quy định
 
-> File này do **Thành viên A (Leader)** khởi tạo đầu tiên.  
-> **Nghiêm cấm** mọi thành viên tự ý chỉnh sửa kiểu dữ liệu hoặc đổi tên biến.
+* Toàn bộ nhóm sử dụng chung `DataStructures.h`.
+* Không tự ý thay đổi cấu trúc thư mục.
+* File `.pro` phải khai báo:
 
----
-
-## 2.1. Các Hằng Số Hệ Thống & Ngưỡng Cảnh Báo
-
-```cpp
-#ifndef DATA_STRUCTURES_H
-#define DATA_STRUCTURES_H
-
-#include <string>
-
-// Ngưỡng cấu hình hệ thống
-const double MAX_HOUSE_POWER = 5000.0;    // Ngưỡng quá tải toàn nhà (Watts)
-const double FORGOTTEN_TIME_LIMIT = 4.0;  // Thiết bị bật liên tục quá 4 giờ giả lập sẽ cảnh báo
-const int MIN_AC_TEMP = 16;               // Nhiệt độ AC tối thiểu
-const int MAX_AC_TEMP = 30;               // Nhiệt độ AC tối đa
+```pro
+QT += charts
 ```
 
 ---
 
-## 2.2. Các Cấu Trúc Dữ Liệu Giao Tiếp (Structs)
+# 2. Dữ Liệu Dùng Chung
+
+## 2.1 Hằng Số Hệ Thống
 
 ```cpp
-// 1. Gói dữ liệu của TỪNG thiết bị gửi lên UI hiển thị
-struct DeviceInfo {
-    std::string id;           // Định dạng: "R1_LIGHT_01", "R2_AC_01"
-                              // (R1: Phòng 1, R2: Phòng 2)
+const double MAX_HOUSE_POWER = 5000.0;
+const double FORGOTTEN_TIME_LIMIT = 4.0;
 
-    std::string name;         // Tên hiển thị:
-                              // "Đèn trần", "Điều hòa Panasonic"
-
-    std::string roomName;     // Tên phòng:
-                              // "Phòng khách", "Phòng ngủ Master"
-
-    std::string type;         // Phân loại để UI map Icon:
-                              // "LIGHT", "FAN", "AC"
-
-    bool isOn;                // Trạng thái hoạt động
-                              // true = ON, false = OFF
-
-    double currentPower;      // Công suất tiêu thụ tức thời hiện tại (W)
-
-    double totalConsumption;  // Điện năng tiêu thụ tích lũy tổng (kWh)
-
-    int extraParam;           // Thông số phụ:
-                              // - Tốc độ quạt (1 → 3)
-                              // - Nhiệt độ AC (16 → 30)
-                              // - Đèn mặc định = 0
-};
-
-// 2. Gói dữ liệu TỔNG QUAN để hiển thị trên Dashboard chính
-struct HomeSummary {
-    double totalCurrentPower; // Tổng công suất tức thời toàn nhà (W)
-
-    double totalEnergyUsed;   // Tổng số điện năng tiêu thụ (kWh)
-
-    double totalCost;         // Tổng tiền điện tạm tính lũy tiến theo EVN (VND)
-
-    int totalDevices;         // Tổng số lượng thiết bị có trong hệ thống
-
-    int activeDevices;        // Số lượng thiết bị hiện đang bật
-                              // (isOn == true)
-};
-
-#endif // DATA_STRUCTURES_H
+const int MIN_AC_TEMP = 16;
+const int MAX_AC_TEMP = 30;
 ```
 
----
-
-# 📡 3. Quy Ước Luồng Tín Hiệu (Qt Signals & Slots)
-
-Lớp **SmartHomeManager** đóng vai trò trung tâm điều phối dữ liệu.
-
-Sự kết nối giữa **UI (Thành viên D)** và **Logic/Core (Thành viên A, B, C)** được thực hiện qua các đầu hàm sau.
-
----
-
-## 3.1. Luồng Điều Khiển Thiết Bị Từ Xa (Từ UI tác động vào Core)
-
-Khi người dùng tương tác trên màn hình, **Thành viên D (UI)** phát ra các **Signal** tương ứng.
-
-**Thành viên A (Core)** viết hàm **Slot** để nhận và xử lý.
-
-| Signal từ UI | Slot xử lý Backend | Mô tả |
-|-------------|-------------------|--------|
-| `void requestTurnOn(std::string deviceId);` | `void slot_handleTurnOnDevice(std::string deviceId);` | Gửi yêu cầu bật thiết bị theo ID |
-| `void requestTurnOff(std::string deviceId);` | `void slot_handleTurnOffDevice(std::string deviceId);` | Gửi yêu cầu tắt thiết bị theo ID |
-| `void requestParamChange(std::string id, int val);` | `void slot_handleUpdateDeviceParam(std::string id, int val);` | Thay đổi tốc độ quạt hoặc nhiệt độ AC |
+| Hằng số              | Ý nghĩa                                            |
+| -------------------- | -------------------------------------------------- |
+| MAX_HOUSE_POWER      | Ngưỡng công suất tối đa toàn hệ thống              |
+| FORGOTTEN_TIME_LIMIT | Thời gian hoạt động liên tục để kích hoạt cảnh báo |
+| MIN_AC_TEMP          | Nhiệt độ điều hòa tối thiểu                        |
+| MAX_AC_TEMP          | Nhiệt độ điều hòa tối đa                           |
 
 ---
 
-## 3.2. Luồng Trả Kết Quả Cập Nhật (Từ Core phản hồi ra UI)
-
-Sau khi Backend xử lý xong logic, thay đổi trạng thái thiết bị hoặc tính xong lượng điện tăng thêm, Thành viên A & C sẽ phát Signal để Thành viên D (UI) nhận và cập nhật giao diện.
+## 2.2 Cấu Trúc Thiết Bị
 
 ```cpp
-// Khai báo trong lớp SmartHomeManager ở mục signals:
+struct DeviceInfo
+{
+    std::string id;
+    std::string name;
+    std::string roomName;
+    std::string type;
 
-// 1. Phát ra khi 1 thiết bị thay đổi trạng thái
-// (Ví dụ: đổi màu nút bấm, đổi icon bật/tắt)
-void sig_deviceStateChanged(const DeviceInfo& updatedDevice);
+    bool isOn;
 
-// 2. Phát ra định kỳ để UI cập nhật Dashboard
-// (kWh, VND, số thiết bị đang bật)
-void sig_summaryUpdated(const HomeSummary& summary);
+    double currentPower;
+    double totalConsumption;
 
-// 3. Phát ra mảng dữ liệu lịch sử tiêu thụ
-// 24 giờ gần nhất để QtCharts vẽ biểu đồ
+    int extraParam;
+};
+```
+
+### Quy ước
+
+| Thuộc tính       | Mô tả                                        |
+| ---------------- | -------------------------------------------- |
+| id               | Mã thiết bị (`R1_LIGHT_01`, `R2_AC_01`, ...) |
+| name             | Tên hiển thị                                 |
+| roomName         | Phòng chứa thiết bị                          |
+| type             | `LIGHT`, `FAN`, `AC`                         |
+| isOn             | Trạng thái hoạt động                         |
+| currentPower     | Công suất tức thời (W)                       |
+| totalConsumption | Điện năng tích lũy (kWh)                     |
+| extraParam       | Tốc độ quạt hoặc nhiệt độ AC                 |
+
+---
+
+## 2.3 Cấu Trúc Dashboard
+
+```cpp
+struct HomeSummary
+{
+    double totalCurrentPower;
+    double totalEnergyUsed;
+    double totalCost;
+
+    int totalDevices;
+    int activeDevices;
+};
+```
+
+### Thông tin hiển thị
+
+* Công suất hiện tại toàn nhà
+* Tổng điện năng tiêu thụ
+* Chi phí điện tạm tính
+* Số lượng thiết bị
+* Số lượng thiết bị đang hoạt động
+
+---
+
+# 3. Giao Tiếp UI ↔ Backend
+
+## 3.1 Điều Khiển Thiết Bị
+
+### UI → Backend
+
+| Signal                       | Slot                                   | Chức năng        |
+| ---------------------------- | -------------------------------------- | ---------------- |
+| `requestTurnOn(id)`          | `slot_handleTurnOnDevice(id)`          | Bật thiết bị     |
+| `requestTurnOff(id)`         | `slot_handleTurnOffDevice(id)`         | Tắt thiết bị     |
+| `requestParamChange(id,val)` | `slot_handleUpdateDeviceParam(id,val)` | Cập nhật tham số |
+
+---
+
+## 3.2 Cập Nhật Giao Diện
+
+### Backend → UI
+
+```cpp
+void sig_deviceStateChanged(
+    const DeviceInfo& updatedDevice
+);
+
+void sig_summaryUpdated(
+    const HomeSummary& summary
+);
+
 void sig_energyHistoryReady(
     const std::vector<double>& hourlyData
 );
 ```
 
+| Signal                 | Mục đích                     |
+| ---------------------- | ---------------------------- |
+| sig_deviceStateChanged | Cập nhật trạng thái thiết bị |
+| sig_summaryUpdated     | Cập nhật Dashboard           |
+| sig_energyHistoryReady | Cập nhật biểu đồ tiêu thụ    |
+
 ---
 
-## 3.3. Luồng Phát Tín Hiệu Cảnh Báo Hệ Thống
-
-Khi Backend tính toán và phát hiện bất thường, lập tức phát ra các tín hiệu sau.
-
-Thành viên D (UI) thiết kế sẵn hàm nhận để hiển thị **Pop-up cảnh báo màu đỏ nhấp nháy**.
+## 3.3 Cảnh Báo Hệ Thống
 
 ```cpp
-// Khai báo trong lớp SmartHomeManager ở mục signals:
-
-// 1. Cảnh báo khi tổng công suất vượt quá 5000W
 void sig_alertOverload(
     double currentTotalPower,
     double maxThreshold
 );
 
-// 2. Cảnh báo khi một thiết bị công suất lớn
-// chạy liên tục quá 4 giờ giả lập
 void sig_alertForgottenDevice(
     const std::string& deviceName,
     double hoursRunning
 );
 ```
 
----
+### Điều kiện kích hoạt
 
-# ⏱️ 4. Quy Ước Engine Mô Phỏng Thời Gian (SimulationEngine)
-
-Để thống nhất về tốc độ dòng chảy của thời gian giả lập, **Thành viên C** cấu hình `QTimer` theo quy ước sau:
-
-## Tỷ lệ quy đổi
+#### Quá tải hệ thống
 
 ```text
-1 giây thời gian thực tế
-=
-0.5 giờ (30 phút) thời gian giả lập
+totalCurrentPower > MAX_HOUSE_POWER
 ```
 
-## Cơ chế kích hoạt
+#### Thiết bị bị quên tắt
 
-Cứ mỗi **1 giây thực**, lớp `SimulationEngine` sẽ phát tín hiệu:
+```text
+runningTime > FORGOTTEN_TIME_LIMIT
+```
+
+UI chịu trách nhiệm hiển thị Popup cảnh báo.
+
+---
+
+# 4. Engine Mô Phỏng Thời Gian
+
+## Tỷ lệ thời gian
+
+```text
+1 giây thực = 0.5 giờ mô phỏng
+```
+
+## Tick hệ thống
 
 ```cpp
 emit sig_timeTick(0.5);
 ```
 
-Ý nghĩa:
+Phát tín hiệu sau mỗi 1 giây thực.
 
-```text
-Hệ thống đã trôi qua 0.5 giờ giả lập
-```
+---
 
-### Xử lý phía Backend
+## Cập Nhật Điện Năng
 
-Thành viên A nhận giá trị `0.5`, duyệt qua danh sách thiết bị.
-
-Đối với các thiết bị có:
+Đối với thiết bị đang hoạt động:
 
 ```cpp
 isOn == true
 ```
 
-thì cộng dồn điện năng tiêu thụ theo công thức:
+Điện năng tăng thêm:
 
-\[
-\Delta A = P_{current} \times 0.5 \; (Wh)
-\]
+ΔA = P × Δt
 
 Trong đó:
 
-- `Pcurrent`: Công suất hiện tại của thiết bị (W)
-- `0.5`: Thời gian giả lập đã trôi qua (giờ)
-- `ΔA`: Điện năng tiêu thụ tăng thêm (Wh)
+* P: Công suất hiện tại (W)
+* Δt = 0.5 giờ
+* ΔA: Điện năng tiêu thụ tăng thêm (Wh)
 
 ---
 
-# 🚨 5. Nguyên Tắc "Bất Khả Xâm Phạm"
+# 5. Quy Tắc Tích Hợp
 
-## 5.1. Không sửa code chéo
+## Không Can Thiệp Chéo
 
-### Thành viên D (UI)
-
-Không được:
-
-- Tự ý sửa biến logic
-- Tự tính điện năng tiêu thụ
-- Tự tính tiền điện
-
-### Thành viên A, B, C (Core)
+### Frontend
 
 Không được:
 
-- Can thiệp vào thuộc tính hiển thị đồ họa Qt
-- Chỉnh sửa giao diện UI
+* Thay đổi trạng thái logic thiết bị
+* Tính toán điện năng
+* Tính toán chi phí
+
+### Backend
+
+Không được:
+
+* Can thiệp giao diện Qt
+* Chỉnh sửa thành phần hiển thị
 
 ---
 
-## 5.2. Ghép nối bằng QObject::connect
+## Kết Nối Module
 
-Việc kết nối toàn bộ hệ thống được thực hiện tập trung tại:
+Mọi kết nối Signal/Slot được thực hiện tập trung tại:
 
 ```text
 main.cpp
 ```
-
-vào ngày tích hợp cuối cùng.
 
 Ví dụ:
 
@@ -267,35 +281,42 @@ QObject::connect(
 
 ---
 
-## 5.3. Xử lý Giá Trị Biên
+## Xử Lý Giá Trị Biên
 
-Mọi dữ liệu do UI gửi xuống nếu vượt quá khoảng cho phép:
+Backend chịu trách nhiệm kiểm tra dữ liệu đầu vào.
 
-```cpp
-MIN_AC_TEMP → MAX_AC_TEMP
-```
+Ví dụ đối với nhiệt độ điều hòa:
 
-Backend sẽ tự động đưa về giá trị hợp lệ gần nhất.
+| Giá trị nhận | Giá trị sử dụng |
+| ------------ | --------------- |
+| < 16         | 16              |
+| 16–30        | Giữ nguyên      |
+| > 30         | 30              |
 
-Ví dụ:
-
-| Giá trị nhận từ UI | Giá trị Backend sử dụng |
-|-------------------|------------------------|
-| 10 | 16 |
-| 15 | 16 |
-| 25 | 25 |
-| 35 | 30 |
-| 40 | 30 |
-
-**Lưu ý:** UI không cần viết code kiểm tra hay chặn dữ liệu đầu vào phức tạp.
+UI không cần xử lý giới hạn dữ liệu.
 
 ---
 
-# 📌 Tóm Tắt Trách Nhiệm
+# 6. Phân Công Thành Viên
 
-| Thành viên | Trách nhiệm chính |
-|------------|------------------|
-| A (Leader) | Core Logic, Device Manager, Signals/Slots |
-| B | Thiết bị thông minh và hành vi thiết bị |
-| C | Simulation Engine, tính điện năng, lịch sử tiêu thụ |
-| D | UI, Dashboard, QtCharts, Popup cảnh báo |
+| Thành viên | Phạm vi phụ trách                         |
+| ---------- | ----------------------------------------- |
+| A (Leader) | Core Logic, SmartHomeManager, Integration |
+| B          | Device Models (Light, Fan, AC)            |
+| C          | Simulation Engine, Energy Tracking        |
+| D          | UI, Dashboard, Charts, Alerts             |
+
+---
+
+## Quy Tắc Cuối Cùng
+
+**DataStructures.h là hợp đồng dữ liệu của toàn dự án.**
+
+Không thay đổi:
+
+* Tên struct
+* Tên biến
+* Kiểu dữ liệu
+* Tên signal/slot
+
+trừ khi có sự thống nhất của toàn nhóm.
