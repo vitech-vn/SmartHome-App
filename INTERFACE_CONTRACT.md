@@ -27,6 +27,8 @@ SmartHomeProject/
 └── Frontend/              <-- Nơi làm việc của D
     ├── MainWindow.h / MainWindow.cpp / MainWindow.ui
     └── CustomChart.h / CustomChart.cpp
+---
+
 # 📐 2. Đặc Tả Dữ Liệu Dùng Chung (DataStructures.h)
 
 > File này do **Thành viên A (Leader)** khởi tạo đầu tiên.  
