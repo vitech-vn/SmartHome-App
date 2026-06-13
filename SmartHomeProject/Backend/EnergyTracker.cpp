@@ -77,4 +77,3 @@ void EnergyTracker::reset()
     );
 }
 
-//
