@@ -1,19 +1,20 @@
-#ifndef RICECOOKER_H
-#define RICECOOKER_H
+#ifndef RICE_COOKER_H
+#define RICE_COOKER_H
 
 #include "Device.h"
 
+// Nồi cơm điện: không có tham số điều chỉnh, công suất cố định.
 class RiceCooker : public Device
 {
-private:
-    int mode;
-
 public:
-    RiceCooker(const std::string &id,
-            const std::string &name,
-            const std::string &roomName);
+    RiceCooker(
+        std::string id,
+        std::string name,
+        std::string roomName,
+        double power
+    );
 
     void updateParam(int value) override;
 };
 
-#endif // RICECOOKER_H
+#endif

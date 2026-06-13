@@ -1,16 +1,19 @@
 #include "WaterHeater.h"
 
-WaterHeater::WaterHeater(const std::string &id,
-                 const std::string &name,
-                 const std::string &roomName)
-    : Device(id, name, roomName, DEVICE_WATER_HEATER, 2000.0)
+WaterHeater::WaterHeater(
+    std::string id,
+    std::string name,
+    std::string roomName,
+    double power
+)
+    : Device(id, name, roomName, DEVICE_WATER_HEATER, power)
 {
-    temperature = 40;
-    info.extraParam = temperature;
+    extraParam = 0;
 }
 
 void WaterHeater::updateParam(int value)
 {
-    temperature = value;
-    info.extraParam = temperature;
+    // Thiết bị này không dùng tham số mở rộng.
+    (void)value;
+    extraParam = 0;
 }

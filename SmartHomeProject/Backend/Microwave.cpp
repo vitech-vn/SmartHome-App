@@ -1,16 +1,19 @@
 #include "Microwave.h"
 
-Microwave::Microwave(const std::string &id,
-                 const std::string &name,
-                 const std::string &roomName)
-    : Device(id, name, roomName, DEVICE_MICROWAVE, 1000.0)
+Microwave::Microwave(
+    std::string id,
+    std::string name,
+    std::string roomName,
+    double power
+)
+    : Device(id, name, roomName, DEVICE_MICROWAVE, power)
 {
-    timerSeconds = 0;
-    info.extraParam = timerSeconds;
+    extraParam = 0;
 }
 
 void Microwave::updateParam(int value)
 {
-    timerSeconds = value;
-    info.extraParam = timerSeconds;
+    // Thiết bị này không dùng tham số mở rộng.
+    (void)value;
+    extraParam = 0;
 }
