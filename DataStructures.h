@@ -53,6 +53,7 @@ struct DeviceInfo
     bool isOn;
 
     double currentPower;        // W
+    double ratedPower;          // W
     double totalConsumption;    // kWh
 
     int extraParam;             // brightness, speed, temperature, volume, ...
