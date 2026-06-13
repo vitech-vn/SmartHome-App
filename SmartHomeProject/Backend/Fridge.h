@@ -3,17 +3,18 @@
 
 #include "Device.h"
 
+// Tủ lạnh: không có tham số điều chỉnh, công suất cố định.
 class Fridge : public Device
 {
-private:
-    int coolingLevel;
-
 public:
-    Fridge(const std::string &id,
-            const std::string &name,
-            const std::string &roomName);
+    Fridge(
+        std::string id,
+        std::string name,
+        std::string roomName,
+        double power
+    );
 
     void updateParam(int value) override;
 };
 
-#endif // FRIDGE_H
+#endif

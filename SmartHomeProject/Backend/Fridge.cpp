@@ -1,16 +1,19 @@
 #include "Fridge.h"
 
-Fridge::Fridge(const std::string &id,
-                 const std::string &name,
-                 const std::string &roomName)
-    : Device(id, name, roomName, DEVICE_FRIDGE, 150.0)
+Fridge::Fridge(
+    std::string id,
+    std::string name,
+    std::string roomName,
+    double power
+)
+    : Device(id, name, roomName, DEVICE_FRIDGE, power)
 {
-    coolingLevel = 3;
-    info.extraParam = coolingLevel;
+    extraParam = 0;
 }
 
 void Fridge::updateParam(int value)
 {
-    coolingLevel = value;
-    info.extraParam = coolingLevel;
+    // Thiết bị này không dùng tham số mở rộng.
+    (void)value;
+    extraParam = 0;
 }

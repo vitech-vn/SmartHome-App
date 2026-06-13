@@ -1,19 +1,20 @@
-#ifndef WASHINGMACHINE_H
-#define WASHINGMACHINE_H
+#ifndef WASHING_MACHINE_H
+#define WASHING_MACHINE_H
 
 #include "Device.h"
 
+// Máy giặt: không có tham số điều chỉnh, công suất cố định.
 class WashingMachine : public Device
 {
-private:
-    int isWashing;
-
 public:
-    WashingMachine(const std::string &id,
-            const std::string &name,
-            const std::string &roomName);
+    WashingMachine(
+        std::string id,
+        std::string name,
+        std::string roomName,
+        double power
+    );
 
     void updateParam(int value) override;
 };
 
-#endif // WASHINGMACHINE_H
+#endif

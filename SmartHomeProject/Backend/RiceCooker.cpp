@@ -1,16 +1,19 @@
 #include "RiceCooker.h"
 
-RiceCooker::RiceCooker(const std::string &id,
-                 const std::string &name,
-                 const std::string &roomName)
-    : Device(id, name, roomName, DEVICE_RICE_COOKER, 700.0)
+RiceCooker::RiceCooker(
+    std::string id,
+    std::string name,
+    std::string roomName,
+    double power
+)
+    : Device(id, name, roomName, DEVICE_RICE_COOKER, power)
 {
-    mode = 0;
-    info.extraParam = mode;
+    extraParam = 0;
 }
 
 void RiceCooker::updateParam(int value)
 {
-    mode = value;
-    info.extraParam = mode;
+    // Thiết bị này không dùng tham số mở rộng.
+    (void)value;
+    extraParam = 0;
 }

@@ -1,19 +1,20 @@
-#ifndef WATERHEATER_H
-#define WATERHEATER_H
+#ifndef WATER_HEATER_H
+#define WATER_HEATER_H
 
 #include "Device.h"
 
+// Bình nước nóng: không có tham số điều chỉnh, công suất cố định.
 class WaterHeater : public Device
 {
-private:
-    int temperature;
-
 public:
-    WaterHeater(const std::string &id,
-            const std::string &name,
-            const std::string &roomName);
+    WaterHeater(
+        std::string id,
+        std::string name,
+        std::string roomName,
+        double power
+    );
 
     void updateParam(int value) override;
 };
 
-#endif // WATERHEATER_H
+#endif

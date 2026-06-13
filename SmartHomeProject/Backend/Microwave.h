@@ -3,17 +3,18 @@
 
 #include "Device.h"
 
+// Lò vi sóng: không có tham số điều chỉnh, công suất cố định.
 class Microwave : public Device
 {
-private:
-    int timerSeconds;
-
 public:
-    Microwave(const std::string &id,
-            const std::string &name,
-            const std::string &roomName);
+    Microwave(
+        std::string id,
+        std::string name,
+        std::string roomName,
+        double power
+    );
 
     void updateParam(int value) override;
 };
 
-#endif // MICROWAVE_H
+#endif

@@ -1,16 +1,19 @@
 #include "WashingMachine.h"
 
-WashingMachine::WashingMachine(const std::string &id,
-                 const std::string &name,
-                 const std::string &roomName)
-    : Device(id, name, roomName, DEVICE_WASHING_MACHINE, 500.0)
+WashingMachine::WashingMachine(
+    std::string id,
+    std::string name,
+    std::string roomName,
+    double power
+)
+    : Device(id, name, roomName, DEVICE_WASHING_MACHINE, power)
 {
-    isWashing = 0;
-    info.extraParam = isWashing;
+    extraParam = 0;
 }
 
 void WashingMachine::updateParam(int value)
 {
-    isWashing = value;
-    info.extraParam = isWashing;
+    // Thiết bị này không dùng tham số mở rộng.
+    (void)value;
+    extraParam = 0;
 }
