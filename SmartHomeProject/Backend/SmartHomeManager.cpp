@@ -113,6 +113,9 @@ SmartHomeManager::updateAll(
             deltaHours
         );
     }
+    energyTracker.update(
+        getAllDevicesInfo()
+    );
 }
 
 //GetHomeSummary
