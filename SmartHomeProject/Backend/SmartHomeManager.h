@@ -6,12 +6,14 @@
 
 #include "Device.h"
 #include "DataStructures.h"
+#include "EnergyTracker.h"
 
 class SmartHomeManager
 {
 private:
 
     std::vector<Device*> devices;
+    EnergyTracker energyTracker;
 
 public:
 
