@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include "../Data/DataStructures.h"
+#include "DataStructures.h"
 
 
 class Device
@@ -32,6 +32,11 @@ protected:
 
 
     double currentPower;
+
+
+    // Công suất danh định (W) - giá trị gốc truyền vào constructor.
+    // Lớp con scale currentPower từ giá trị này theo tham số.
+    double ratedPower;
 
 
     double totalConsumption;

@@ -24,6 +24,8 @@ this->type=type;
 
 currentPower=power;
 
+ratedPower=power;
+
 
 isOn=false;
 
