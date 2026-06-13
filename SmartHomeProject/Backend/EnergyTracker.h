@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "../Data/DataStructures.h"
+#include "DataStructures.h"
 
 class EnergyTracker
 {
